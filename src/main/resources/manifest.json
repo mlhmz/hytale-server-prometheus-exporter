@@ -1,0 +1,10 @@
+{
+  "Group": "mlhmz",
+  "Name": "Prometheus Exporter",
+  "Version": "1.0.0",
+  "Main": "xyz.mlhmz.exporter.PrometheusExporterPlugin",
+  "Description": "Export metrics for prometheus",
+  "Authors": [ { "Name": "mlhmz" } ],
+  "Dependencies": {},
+  "OptionalDependencies": {}
+}
