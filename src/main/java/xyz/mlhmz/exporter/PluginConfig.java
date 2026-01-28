@@ -17,27 +17,27 @@ public class PluginConfig {
 
     public static BuilderCodec<PluginConfig> newInstance() {
         return BuilderCodec.builder(PluginConfig.class, PluginConfig::new)
-                .append(new KeyedCodec<>("hostName", BuilderCodec.STRING),
+                .append(new KeyedCodec<>("HostName", BuilderCodec.STRING),
                         PluginConfig::setHostName,
                         PluginConfig::getHostName
                 ).add()
                 .append(
-                        new KeyedCodec<>("port", BuilderCodec.INTEGER),
+                        new KeyedCodec<>("Port", BuilderCodec.INTEGER),
                         PluginConfig::setPort,
                         PluginConfig::getPort
                 ).add()
                 .append(
-                        new KeyedCodec<>("worldMetricsEnabled", BuilderCodec.BOOLEAN),
+                        new KeyedCodec<>("WorldMetricsEnabled", BuilderCodec.BOOLEAN),
                         PluginConfig::setWorldMetricsEnabled,
                         PluginConfig::isWorldMetricsEnabled
                 ).add()
                 .append(
-                        new KeyedCodec<>("playerMetricsEnabled", BuilderCodec.BOOLEAN),
+                        new KeyedCodec<>("PlayerMetricsEnabled", BuilderCodec.BOOLEAN),
                         PluginConfig::setPlayerMetricsEnabled,
                         PluginConfig::isPlayerMetricsEnabled
                 ).add()
                 .append(
-                        new KeyedCodec<>("entityMetricsEnabled", BuilderCodec.BOOLEAN),
+                        new KeyedCodec<>("EntityMetricsEnabled", BuilderCodec.BOOLEAN),
                         PluginConfig::setEntityMetricsEnabled,
                         PluginConfig::isEntityMetricsEnabled
                 ).add()
