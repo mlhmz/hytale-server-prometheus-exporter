@@ -28,6 +28,9 @@ public class PrometheusExporterPlugin extends JavaPlugin {
     protected void start() {
         PluginConfig config = this.configWrapper.get();
 
+        // Save the config to create the file if it does not exist
+        this.configWrapper.save();
+
         Objects.requireNonNull(config, "PluginConfig cannot be null.");
 
         getLogger().at(Level.INFO).log("Prometheus Exporter successfully started!");
