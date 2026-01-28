@@ -3,6 +3,7 @@ package xyz.mlhmz.exporter;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
+import com.hypixel.hytale.server.core.util.Config;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
 import xyz.mlhmz.exporter.metrics.*;
@@ -11,20 +12,25 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class PrometheusExporterPlugin extends JavaPlugin {
     private static HTTPServer server = null;
+    private final Config<PluginConfig> configWrapper;
 
     public PrometheusExporterPlugin(@Nonnull JavaPluginInit init) {
         super(init);
+        configWrapper = withConfig(PluginConfig.newInstance());
     }
 
     @Override
     protected void start() {
-        getLogger().at(Level.INFO).log("Prometheus Exporter successfully started!");
+        PluginConfig config = this.configWrapper.get();
 
-        PluginConfig config = withConfig(PluginConfig.newInstance()).get();
+        Objects.requireNonNull(config, "PluginConfig cannot be null.");
+
+        getLogger().at(Level.INFO).log("Prometheus Exporter successfully started!");
 
         registerHytaleMetrics(config);
 

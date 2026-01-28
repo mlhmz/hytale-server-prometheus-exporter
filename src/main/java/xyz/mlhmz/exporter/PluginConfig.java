@@ -14,6 +14,7 @@ public class PluginConfig {
     private boolean worldMetricsEnabled = true;
     private boolean playerMetricsEnabled = true;
     private boolean entityMetricsEnabled = true;
+    private boolean serverMetricsEnabled = true;
 
     public static BuilderCodec<PluginConfig> newInstance() {
         return BuilderCodec.builder(PluginConfig.class, PluginConfig::new)
@@ -40,6 +41,11 @@ public class PluginConfig {
                         new KeyedCodec<>("EntityMetricsEnabled", BuilderCodec.BOOLEAN),
                         PluginConfig::setEntityMetricsEnabled,
                         PluginConfig::isEntityMetricsEnabled
+                ).add()
+                .append(
+                        new KeyedCodec<>("ServerMetricsEnabled", BuilderCodec.BOOLEAN),
+                        PluginConfig::setServerMetricsEnabled,
+                        PluginConfig::isServerMetricsEnabled
                 ).add()
                 .build();
 
