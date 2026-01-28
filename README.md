@@ -2,7 +2,7 @@
 
 Work in Progress Prometheus exporter for Hytale Servers. 
 Utilizes the Prometheus Java Lib, already exports the usual JvmMetrics, the Player Count, 
-and the World TPS (that is apparently fixed, so useless?)
+and the World TPS
 
 ## Dev Setup
 Right now the process, to use the API is a bit hacky, which is kinda my fault, because its easier to import local files in gradle.
@@ -19,6 +19,5 @@ Hopefully we can expect in the future to get  an actual maven repository that ho
 
 ## TODOs
 - [ ] Gather more metricsRegistry
-  - [ ] And gather an actual better metric that shows if the server lags (World TPS apparently stays at 30.0 - skill issue?)
 - [ ] Make web server port in config configurable
 - [ ] Setup version structure
