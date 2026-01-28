@@ -36,17 +36,17 @@
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
-            <artifactId>prometheus-metricsRegistry-core</artifactId>
+            <artifactId>prometheus-metrics-core</artifactId>
             <version>1.4.3</version>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
-            <artifactId>prometheus-metricsRegistry-instrumentation-jvm</artifactId>
+            <artifactId>prometheus-metrics-instrumentation-jvm</artifactId>
             <version>1.4.3</version>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
-            <artifactId>prometheus-metricsRegistry-exporter-httpserver</artifactId>
+            <artifactId>prometheus-metrics-exporter-httpserver</artifactId>
             <version>1.4.3</version>
         </dependency>
     </dependencies>

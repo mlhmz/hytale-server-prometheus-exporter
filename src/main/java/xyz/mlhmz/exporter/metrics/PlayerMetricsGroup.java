@@ -27,6 +27,6 @@ public class PlayerMetricsGroup implements MetricsGroup {
 
     @Override
     public String getConfigKey() {
-        return "playerCount";
+        return "playerMetrics";
     }
 }
