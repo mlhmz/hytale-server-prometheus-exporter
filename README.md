@@ -15,10 +15,10 @@ Hopefully we can expect in the future to get  an actual maven repository that ho
 
 ## Server Setup
 1. Put plugin into the servers mods folder
-2. Add the server into the prometheus configuration with the metrics endpoint `<HOST>:9400/metrics` (And put the Prometheus and Hytale Server into a docker network if the hytale server is run via docker like I do it)
+2. Add the server into the prometheus configuration with the metricsRegistry endpoint `<HOST>:9400/metricsRegistry` (And put the Prometheus and Hytale Server into a docker network if the hytale server is run via docker like I do it)
 
 ## TODOs
-- [ ] Gather more metrics
+- [ ] Gather more metricsRegistry
   - [ ] And gather an actual better metric that shows if the server lags (World TPS apparently stays at 30.0 - skill issue?)
 - [ ] Make web server port in config configurable
 - [ ] Setup version structure

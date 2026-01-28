@@ -7,22 +7,30 @@ import com.hypixel.hytale.server.core.universe.world.commands.world.perf.WorldPe
 import io.prometheus.metrics.core.metrics.GaugeWithCallback;
 import io.prometheus.metrics.core.metrics.MetricWithFixedMetadata;
 
-public record TpsGaugeMetric(Universe universe) implements Metric {
+import java.util.List;
+import java.util.Map;
+
+public record WorldMetricsGroup(Universe universe) implements MetricsGroup {
     @Override
-    public MetricWithFixedMetadata register() {
-        return GaugeWithCallback.builder()
+    public List<MetricWithFixedMetadata> register() {
+
+        Map<String, World> worlds = universe.getWorlds();
+
+        GaugeWithCallback tpsGauge = GaugeWithCallback.builder()
                 .name("hytale_tps")
                 .help("TPS counter per world")
                 .labelNames("world")
                 .callback(callback -> {
-                    for (World world : universe.getWorlds().values()) {
+                    for (var worldSet : worlds.entrySet()) {
+                        World world = worldSet.getValue();
                         int tickStepNanos = world.getTickStepNanos();
                         HistoricMetric metric = world.getBufferedTickLengthMetricSet();
                         double tps = WorldPerfCommand.tpsFromDelta(metric.getLastValue(), tickStepNanos);
-                        String worldName = world.getName();
-                        callback.call(tps, worldName);
+                        callback.call(tps, worldSet.getKey());
                     }
                 }).register();
+
+        return List.of(tpsGauge);
     }
 
     @Override

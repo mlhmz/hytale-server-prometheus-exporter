@@ -3,19 +3,26 @@ package xyz.mlhmz.exporter.metrics;
 import com.hypixel.hytale.server.core.universe.Universe;
 import io.prometheus.metrics.core.metrics.GaugeWithCallback;
 import io.prometheus.metrics.core.metrics.MetricWithFixedMetadata;
+import lombok.RequiredArgsConstructor;
 
-public record TotalPlayerCountGaugeMetric(Universe universe) implements Metric {
+import java.util.List;
+
+@RequiredArgsConstructor
+public class PlayerMetricsGroup implements MetricsGroup {
+    private final Universe universe;
+
     @Override
-    public MetricWithFixedMetadata register() {
-        return GaugeWithCallback.builder()
+    public List<MetricWithFixedMetadata> register() {
+        GaugeWithCallback playerCountGauge = GaugeWithCallback.builder()
                 .name("hytale_player_count")
                 .help("Total player count")
                 .callback(callback -> {
-                    Universe universe = Universe.get();
                     int playerCount = universe.getPlayerCount();
                     callback.call(playerCount);
                 })
                 .register();
+
+        return List.of(playerCountGauge);
     }
 
     @Override

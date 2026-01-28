@@ -5,9 +5,9 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
-import xyz.mlhmz.exporter.metrics.Metrics;
-import xyz.mlhmz.exporter.metrics.TotalPlayerCountGaugeMetric;
-import xyz.mlhmz.exporter.metrics.TpsGaugeMetric;
+import xyz.mlhmz.exporter.metrics.MetricsRegistry;
+import xyz.mlhmz.exporter.metrics.PlayerMetricsGroup;
+import xyz.mlhmz.exporter.metrics.WorldMetricsGroup;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -29,11 +29,13 @@ public class PrometheusExporterPlugin extends JavaPlugin {
 
         Universe universe = Universe.get();
 
-        Metrics.create(
+        MetricsRegistry metricsRegistry = new MetricsRegistry(
                 getLogger(),
-                new TpsGaugeMetric(universe),
-                new TotalPlayerCountGaugeMetric(universe)
-        ).register();
+                new WorldMetricsGroup(universe),
+                new PlayerMetricsGroup(universe)
+        );
+
+        metricsRegistry.register();
 
         try {
             server = HTTPServer.builder()
