@@ -6,6 +6,7 @@ import io.prometheus.metrics.core.metrics.MetricWithFixedMetadata;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class PlayerMetricsGroup implements MetricsGroup {
@@ -13,6 +14,8 @@ public class PlayerMetricsGroup implements MetricsGroup {
 
     @Override
     public List<MetricWithFixedMetadata> register() {
+        Objects.requireNonNull(universe, "Universe cannot be null");
+
         GaugeWithCallback playerCountGauge = GaugeWithCallback.builder()
                 .name("hytale_player_count")
                 .help("Total player count")
@@ -23,10 +26,5 @@ public class PlayerMetricsGroup implements MetricsGroup {
                 .register();
 
         return List.of(playerCountGauge);
-    }
-
-    @Override
-    public String getConfigKey() {
-        return "playerMetrics";
     }
 }
