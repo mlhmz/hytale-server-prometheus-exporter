@@ -1,6 +1,6 @@
 {
   "Group": "mlhmz",
-  "Name": "Prometheus Exporter",
+  "Name": "Prometheus_Exporter",
   "Version": "1.0.0",
   "Main": "xyz.mlhmz.exporter.PrometheusExporterPlugin",
   "Description": "Export metrics for prometheus",
