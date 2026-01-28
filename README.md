@@ -31,7 +31,6 @@ The plugin currently registers the following metrics (Prometheus names):
 - `hytale_chunk_generation_rate_total{world="<world>"}` — total chunk generation rate per world.
 - `hytale_player_count` — total players across the server.
 - `hytale_world_entity_count{world="<world>"}` — number of entities in each world.
-- `hytale_whitelisted_player_count` — total players in the whitelist.
 
 Additionally the Prometheus Java JvmMetrics instrumentation is registered which exposes standard JVM metrics (memory pools, GC, threads, classloader, buffer pools, etc.).
 

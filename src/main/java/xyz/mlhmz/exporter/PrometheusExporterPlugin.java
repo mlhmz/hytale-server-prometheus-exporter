@@ -74,10 +74,6 @@ public class PrometheusExporterPlugin extends JavaPlugin {
             metricsGroupList.add(new EntitiesMetricsGroup(universe));
         }
 
-        if (config.isServerMetricsEnabled()) {
-            metricsGroupList.add(new ServerMetricsGroup());
-        }
-
         MetricsRegistry metricsRegistry = new MetricsRegistry(
                 getLogger(),
                 metricsGroupList
