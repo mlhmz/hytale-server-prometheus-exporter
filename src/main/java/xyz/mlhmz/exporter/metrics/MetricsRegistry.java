@@ -9,9 +9,9 @@ public class MetricsRegistry {
     private final HytaleLogger logger;
     private final List<MetricsGroup> metricsGroupList;
 
-    public MetricsRegistry(HytaleLogger logger, MetricsGroup... metricsGroupList) {
+    public MetricsRegistry(HytaleLogger logger, List<MetricsGroup> metricsGroupList) {
         this.logger = logger;
-        this.metricsGroupList = List.of(metricsGroupList);
+        this.metricsGroupList = metricsGroupList;
     }
 
     public void register() {

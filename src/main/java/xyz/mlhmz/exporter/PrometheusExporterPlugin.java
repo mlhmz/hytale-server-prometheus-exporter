@@ -5,12 +5,12 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
 import io.prometheus.metrics.instrumentation.jvm.JvmMetrics;
-import xyz.mlhmz.exporter.metrics.MetricsRegistry;
-import xyz.mlhmz.exporter.metrics.PlayerMetricsGroup;
-import xyz.mlhmz.exporter.metrics.WorldMetricsGroup;
+import xyz.mlhmz.exporter.metrics.*;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class PrometheusExporterPlugin extends JavaPlugin {
@@ -24,27 +24,53 @@ public class PrometheusExporterPlugin extends JavaPlugin {
     protected void start() {
         getLogger().at(Level.INFO).log("Prometheus Exporter successfully started!");
 
+        PluginConfig config = withConfig(PluginConfig.newInstance()).get();
+
+        registerHytaleMetrics(config);
 
         JvmMetrics.builder().register();
 
-        Universe universe = Universe.get();
-
-        MetricsRegistry metricsRegistry = new MetricsRegistry(
-                getLogger(),
-                new WorldMetricsGroup(universe),
-                new PlayerMetricsGroup(universe)
-        );
-
-        metricsRegistry.register();
-
         try {
-            server = HTTPServer.builder()
-                    .port(9400)
+            HTTPServer.Builder serverBuilder = HTTPServer.builder()
+                    .port(config.getPort());
+            if (isHostNameNotNullEmptyOrBlank(config)) {
+                serverBuilder = serverBuilder.hostname(config.getHostName());
+            }
+            server = serverBuilder
                     .buildAndStart();
         } catch (IOException e) {
             getLogger().at(Level.SEVERE).log("An error occured while starting the prometheus server", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static boolean isHostNameNotNullEmptyOrBlank(PluginConfig config) {
+        return config.getHostName() != null && !config.getHostName().isEmpty() && !config.getHostName().isBlank();
+    }
+
+    private void registerHytaleMetrics(PluginConfig config) {
+        Universe universe = Universe.get();
+
+        List<MetricsGroup> metricsGroupList = new ArrayList<>();
+
+        if (config.isWorldMetricsEnabled()) {
+            metricsGroupList.add(new WorldMetricsGroup(universe));
+        }
+
+        if (config.isPlayerMetricsEnabled()) {
+            metricsGroupList.add(new PlayerMetricsGroup(universe));
+        }
+
+        if (config.isEntityMetricsEnabled()) {
+            metricsGroupList.add(new EntitiesMetricsGroup(universe));
+        }
+
+        MetricsRegistry metricsRegistry = new MetricsRegistry(
+                getLogger(),
+                metricsGroupList
+        );
+
+        metricsRegistry.register();
     }
 
 
