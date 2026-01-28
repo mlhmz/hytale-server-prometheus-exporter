@@ -4,12 +4,14 @@ import com.hypixel.hytale.metrics.metric.HistoricMetric;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.commands.world.perf.WorldPerfCommand;
+import io.prometheus.metrics.core.metrics.CounterWithCallback;
 import io.prometheus.metrics.core.metrics.GaugeWithCallback;
 import io.prometheus.metrics.core.metrics.MetricWithFixedMetadata;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class WorldMetricsGroup implements MetricsGroup {
 
     @Override
     public List<MetricWithFixedMetadata> register() {
+        Objects.requireNonNull(universe, "Universe cannot be null");
 
         Map<String, World> worlds = universe.getWorlds();
 
@@ -37,14 +40,59 @@ public class WorldMetricsGroup implements MetricsGroup {
                         .forEach((worldName, activeChunks) -> callback.call(activeChunks, worldName)))
                 .register();
 
-        return List.of(tpsGauge, activeChunksGauge);
+        CounterWithCallback chunkLoadedTotal = CounterWithCallback.builder()
+                .name("hytale_chunk_generation_total")
+                .help("Total chunk loaded rate per world")
+                .labelNames("world")
+                .callback(callback -> mapWorldTotalLoadedChunksIntoMap(worlds).forEach((worldName, generatedChunks) ->
+                        callback.call(generatedChunks, worldName)))
+                .register();
+
+        CounterWithCallback chunkGeneratedTotal = CounterWithCallback.builder()
+                .name("hytale_chunk_generation_rate_total")
+                .help("Total chunk generation rate per world")
+                .labelNames("world")
+                .callback(callback -> mapWorldTotalGeneratedChunksIntoMap(worlds).forEach((worldName, generatedChunks) ->
+                        callback.call(generatedChunks, worldName)))
+                .register();
+
+        return List.of(
+                tpsGauge,
+                activeChunksGauge,
+                chunkLoadedTotal,
+                chunkGeneratedTotal
+        );
+    }
+
+
+    private Map<String, Integer> mapWorldTotalLoadedChunksIntoMap(Map<String, World> worlds) {
+        return worlds.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue()
+                                .getChunkStore()
+                                .getTotalLoadedChunksCount()
+                ));
+    }
+
+
+    private Map<String, Integer> mapWorldTotalGeneratedChunksIntoMap(Map<String, World> worlds) {
+        return worlds.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue()
+                                .getChunkStore()
+                                .getTotalGeneratedChunksCount()
+                ));
     }
 
     private Map<String, Integer> mapWorldActiveChunksIntoMap(Map<String, World> worlds) {
         return worlds.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        entry -> entry.getValue().getChunkStore().getLoadedChunksCount()
+                        entry -> entry.getValue()
+                                .getChunkStore()
+                                .getLoadedChunksCount()
                 ));
     }
 
@@ -60,10 +108,5 @@ public class WorldMetricsGroup implements MetricsGroup {
         int tickStepNanos = entry.getValue().getTickStepNanos();
         HistoricMetric metric = entry.getValue().getBufferedTickLengthMetricSet();
         return WorldPerfCommand.tpsFromDelta(metric.getLastValue(), tickStepNanos);
-    }
-
-    @Override
-    public String getConfigKey() {
-        return "worldMetrics";
     }
 }
