@@ -27,8 +27,8 @@ The plugin currently registers the following metrics (Prometheus names):
 
 - `hytale_tps{world="<world>"}` — current ticks-per-second per world.
 - `hytale_world_active_chunks{world="<world>"}` — number of active (loaded) chunks per world.
-- `hytale_chunk_generation_total{world="<world>"}` — total chunks loaded per world.
-- `hytale_chunk_generation_rate_total{world="<world>"}` — total chunk generation rate per world.
+- `hytale_chunk_generated_total{world="<world>"}` — total chunks loaded per world.
+- `hytale_chunk_loaded_total{world="<world>"}` — total generated chunks per world.
 - `hytale_player_count` — total players across the server.
 - `hytale_world_entity_count{world="<world>"}` — number of entities in each world.
 

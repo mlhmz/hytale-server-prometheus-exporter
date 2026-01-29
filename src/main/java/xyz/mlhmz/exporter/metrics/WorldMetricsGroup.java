@@ -41,7 +41,7 @@ public class WorldMetricsGroup implements MetricsGroup {
                 .register();
 
         CounterWithCallback chunkLoadedTotal = CounterWithCallback.builder()
-                .name("hytale_chunk_generation_total")
+                .name("hytale_chunk_loaded_total")
                 .help("Total chunk loaded rate per world")
                 .labelNames("world")
                 .callback(callback -> mapWorldTotalLoadedChunksIntoMap(worlds).forEach((worldName, generatedChunks) ->
@@ -49,8 +49,8 @@ public class WorldMetricsGroup implements MetricsGroup {
                 .register();
 
         CounterWithCallback chunkGeneratedTotal = CounterWithCallback.builder()
-                .name("hytale_chunk_generation_rate_total")
-                .help("Total chunk generation rate per world")
+                .name("hytale_chunk_generated_total")
+                .help("Total generated chunks per world")
                 .labelNames("world")
                 .callback(callback -> mapWorldTotalGeneratedChunksIntoMap(worlds).forEach((worldName, generatedChunks) ->
                         callback.call(generatedChunks, worldName)))
